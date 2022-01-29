@@ -1,36 +1,36 @@
-bool myCmp(vector<int> a1, vector<int> a2) {
-    return a1[0] < a2[0];
-}
-
 class Solution {
 public:
+    
+    static bool comapreIntervals(vector<int> &v1, vector<int> &v2) {
+        return v1[0] < v2[0];
+    }
+    
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int> > res;
+        stack<vector<int> > st;
+        int n = intervals.size();
         
-        sort(intervals.begin(), intervals.end(), myCmp);
+        sort(intervals.begin(), intervals.end(), comapreIntervals);
+        st.push(intervals[0]);
         
-        stack<vector<int> > s;
-        s.push(intervals[0]);
-        
-        for(int i=1;i<intervals.size(); i++) {
-            vector<int> curr = s.top();
-            
-            if(curr[1] < intervals[i][0]) {
-                s.push(intervals[i]);
+        for(int i=1;i<n;i++) {
+            vector<int> curr = st.top();
+            if(curr[1] >= intervals[i][0]) {
+                curr[1] = max(curr[1], intervals[i][1]);
+                st.pop();
+                st.push(curr);
+            } else {
+                st.push(intervals[i]);
             }
-            else if(curr[1] < intervals[i][1]) {
-                curr[1] = intervals[i][1];
-                s.pop();
-                s.push(curr);
-            } 
-        }
-        vector<vector<int> > ans;
-        
-        while(!s.empty()) {
-            ans.push_back(s.top());
-            s.pop();
         }
         
-        reverse(ans.begin(), ans.end());
-        return ans;
+        while(!st.empty()) {
+            res.push_back(st.top());
+            st.pop();
+        }        
+        
+        reverse(res.begin(), res.end());
+        
+        return res;
     }
 };

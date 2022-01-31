@@ -27,7 +27,7 @@ public:
         if(isFull()) {
             return false;
         } else {
-            if(front == -1 && rear == -1) {
+            if(isEmpty()) {
                 rear = front = 0;
                 arr[rear] = value;
             } else {
